@@ -1,0 +1,28 @@
+# If you accidentally deleted your server's ".ssh/authorized_keys" then follow below steps
+
+# lost key instance => lost_ec2
+# new launched instance => new_ec2
+step 1: launch new ec2 instance and generate new .pem(new_pem.pem) file(or you can use existing pem file also).
+
+step 2: stop lost_ec2 instance and dettache volume.
+step 3: attach lost_ec2 volume to new_ec2 volume.
+
+step 4: log in to new_ec2 using new_pem.pem file.
+
+step 5: follow these steps..
+  mkdir /mnt/recovery
+  #Mounting the volume using the previously annotated parameter as first argument
+  mount /dev/sdf(enter new name asxvdf if any error) /mnt/recovery
+  cat /home/ec2-user/.ssh/authorized_keys > /mnt/recovery/home/ec2-user/.ssh/authorized_keys
+  #Un-mounting the volume
+  umount /mnt/recovery/
+  
+  step 6: Wait for some time as it will take time.
+  
+  
+  step 7: Now re attach it to lost_ec2 as device path /dev/sda1
+  
+  
+  st2p 8: Now you will be able to login to this lost_ec2 instance using new_pem.pem file
+
+
