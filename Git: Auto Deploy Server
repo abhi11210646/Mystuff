@@ -1,0 +1,50 @@
+Step-1: create git directory (/home/ubuntu/site.git).
+$/home/ubuntu/site.git> git init --bare
+
+Step-2: your deployment path (/home/ubuntu/www) from where site will be served.
+Step-3: Inside site.git folder move to hooks folder and create a file named post-receive.
+paste below code inside it.
+
+#!/bin/bash
+
+deploy="yes"
+while read oldrev newrev refname
+do
+    ref=$(git rev-parse --symbolic --abbrev-ref $refname)
+    if [ -n "$ref" ] && [ "master" == "$ref" ]; then
+       work_tree="/home/ubuntu/www"
+       branch="master"
+    elif [ -n "$ref" ] && [ "dev" == "$ref" ]; then
+       work_tree="/home/ubuntu/www2"
+       branch="dev"
+    else
+       echo "Got $ref branch. Doing Nothing."
+       deploy="no"
+    fi
+done
+
+if [ "yes" == "$deploy" ]; then
+   git --work-tree=$work_tree --git-dir=/home/ubuntu/site.git checkout $branch -f
+   NOW=$(date +"%Y%m%d-%H%M%S")
+   git tag release_$NOW $target_branch
+   echo "    //==============================="
+   echo "   || DEPLOYMENT COMPLETED"
+   echo "   || Target branch: $branch"
+   echo "   || Target folder: $work_tree"
+   echo "   || Tag name     : release_$NOW"
+   echo "   \\=============================="
+fi
+
+Step-4: Give execution permissions
+
+chmod +x /hooks/port-receive
+
+
+Step-5: add remote git in you local git repo
+
+git remote add live ssh://ec2-user@IPOrPublicDNS:/home/ubuntu/site.git
+
+git push/pull live "branch"
+
+
+
