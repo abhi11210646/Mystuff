@@ -1,0 +1,115 @@
+# SETUP APACHE ON WINDOW
+
+> Path can be different for your xampp server so look for file location accordingly.
+ 
+**Step:1**  C:/xampp/apache/conf/httpd.conf
+
+       Search for “proxy_http_module” and uncomment it.
+
+
+**Step:2**  C:/xampp/apache/conf/extra/httpd-vhosts.conf 
+
+       Replace the whole file with this content.
+       
+       <VirtualHost *:80>
+            ServerName  livec.outgrow.local
+            ServerAlias live.outgrow.local
+
+            RewriteEngine On
+            RewriteCond %{HTTP:Upgrade} =websocket
+            RewriteRule /(.*)           ws://localhost:4444/$1 [P,L]
+            RewriteCond %{HTTP:Upgrade} !=websocket
+            RewriteRule /(.*)           http://localhost:4444/$1 [P,L]
+
+            ProxyPass / http://localhost:4444/
+            ProxyPassReverse / http://localhost:4444/
+      </VirtualHost>
+      <VirtualHost *:80>
+
+            ServerName  app.outgrow.local
+            ServerAlias *.outgrow.local
+
+            RewriteEngine On
+            RewriteCond %{HTTP:Upgrade} =websocket
+            RewriteRule /(.*)           ws://localhost:5555/$1 [P,L]
+            RewriteCond %{HTTP:Upgrade} !=websocket
+            RewriteRule /(.*)           http://localhost:5555/$1 [P,L]
+
+            ProxyPass / http://localhost:5555/
+            ProxyPassReverse / http://localhost:5555/
+      </VirtualHost>
+      <virtualhost *:80>
+          ServerName localhost
+          DocumentRoot "path to htdocs"
+      </virtualhost>
+
+**Step:3**  C:\Windows\System32\drivers\etc\hosts
+
+        127.0.0.1       app.outgrow.local
+        127.0.0.1       live.outgrow.local
+        127.0.0.1       livec.outgrow.local
+        127.0.0.1       yoursubdomain.outgrow.local
+
+**Step:4**   RESTART APACHE
+
+# SETUP APACHE ON UBUNTU
+
+**Enable these after installing apache2**
+
+       sudo a2enmod rewrite
+       sudo a2enmod proxy
+       sudo a2enmod proxy_http
+       sudo a2enmod proxy_balancer
+
+**Paste this to /etc/apache2/sites-available/000-default.conf**
+
+       <VirtualHost *:80>
+            ServerName  livec.outgrow.local
+            ServerAlias live.outgrow.local
+
+            RewriteEngine On
+            RewriteCond %{HTTP:Upgrade} =websocket
+            RewriteRule /(.*)           ws://localhost:4444/$1 [P,L]
+            RewriteCond %{HTTP:Upgrade} !=websocket
+            RewriteRule /(.*)           http://localhost:4444/$1 [P,L]
+
+            ProxyPass / http://localhost:4444/
+            ProxyPassReverse / http://localhost:4444/
+      </VirtualHost>
+      <VirtualHost *:80>
+
+            ServerName  app.outgrow.local
+            ServerAlias *.outgrow.local
+
+            RewriteEngine On
+            RewriteCond %{HTTP:Upgrade} =websocket
+            RewriteRule /(.*)           ws://localhost:5555/$1 [P,L]
+            RewriteCond %{HTTP:Upgrade} !=websocket
+            RewriteRule /(.*)           http://localhost:5555/$1 [P,L]
+
+            ProxyPass / http://localhost:5555/
+            ProxyPassReverse / http://localhost:5555/
+      </VirtualHost>
+      <virtualhost *:80>
+          ServerName localhost
+          DocumentRoot "default path to apache html folder"
+      </virtualhost>
+
+**Paste this to /etc/hosts**
+
+        127.0.0.1       app.outgrow.local
+        127.0.0.1       live.outgrow.local
+        127.0.0.1       livec.outgrow.local
+        127.0.0.1       yoursubdomain.outgrow.local
+
+**Restart Apache**
+
+      systemctl status apache2.service
+
+      sudo service apache2 restart
+
+**Or**
+
+      sudo service apache2 reload
+
+
