@@ -1,0 +1,29 @@
+# Use this file for multiple git login for multiple git repo.
+
+## Generate ssh key from here https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+#### At the time of selecting path choose a name "id_rsa_personal" where personal is added as suffix to uniquly identif ssh key.
+## And add it to right git account https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/.
+
+
+Step:1 Open config file 
+> cd .ssh
+> vi config
+
+Step:2 write configuration
+
+Host personal      // personal is a #name you can name it any name
+  HostName github.com
+  IdentityFile ~/.ssh/id_rsa_personal
+Host another-pro   
+  HostName github.com
+  IdentityFile ~/.ssh/id_rsa_another-pro
+  
+Save and close this file
+  
+Step:3 Clone gitHub repo // Repo cloning should be done after .ssh/config file is setup.
+
+git clone git@personal:abhi11210646/Mystuff.git  // here 'personal' is the name we defined in .ssh/config file. step2
+
+Step:4 You are done. now you can pull/push. 
+
+Same step will be follow for another git repo.
