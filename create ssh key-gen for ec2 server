@@ -1,0 +1,17 @@
+# generate public/private keys using ssh-keygen
+ssh-keygen -t rsa
+
+# change the permissions of the .pem file so only the root user can read it
+chmod 400 amazon-generated-key.pem
+
+# copy the machine to the remote repository
+ssh-copy-id -i ~/.ssh/id_rsa.pub amazon-generated-key.pem ec2-user@amazon-instance-public-dns
+
+# or
+cat ~/.ssh/id_rsa.pub | ssh -i amazon-generated-key.pem ec2-user@amazon-instance-public-dns "cat >> .ssh/authorized_keys"
+
+# try to connect without the pem
+ssh ec2-user@amazon-instance-public-dns
+
+# and push it to remote
+git push remote local:master
