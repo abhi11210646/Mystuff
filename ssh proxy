@@ -1,0 +1,13 @@
+
+# Connect to your Private EC2 instance using proxy command through pubic EC2 instance
+
+Host publicEC2
+   HostName 54.xx.Xx.20  
+   User ec2-user
+   IdentityFile ~/downloads/AWS/MyKeyPair.pem
+   ProxyCommand none
+Host privateEc2
+   HostName 172.xx.87.yy 
+   User ec2-user 
+   IdentityFile ~/downloads/AWS/MyKeyPair.pem
+   ProxyCommand ssh publicEC2 -W %h:%p
