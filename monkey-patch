@@ -1,0 +1,16 @@
+#Monkey patching cd command
+
+cd(){ 
+    builtin cd "$@"
+	echo "Moving to $PWD"
+	FILE_NAME="config.txt"
+	if [[ -f $FILE_NAME && $PWD == /e/Outgrow-frontend/Outgrow-frontend ]]
+	then
+    	config=$(<$FILE_NAME)
+    	if [[ ! -z "$config" ]]
+    	then
+			echo -e "\033[0;32mAnother build is in process for \033[1;33m$config\033[0;32m branch. So please wait for that to complete!"
+			# exit 0
+    	fi
+	fi
+  }
