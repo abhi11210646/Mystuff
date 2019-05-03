@@ -1,0 +1,48 @@
+image: node:latest
+
+stages:
+ - build
+ - deploy
+ 
+variables:
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: "2"
+
+build_and_deploy_to_firebase:
+ stage: build
+ only:
+  refs:
+   - outgrow.in
+ cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+   - node_modules/
+ environment: 
+    name: development
+    url: http://livec.outgrow.in/_
+ artifacts:
+  paths:
+   - dist
+  expire_in: 10 minutes
+ before_script:
+  - npm install --quiet --production
+  - npm install firebase-tools
+ script:
+  - npm run build
+  - npm run firebase:deploy
+  
+  
+push_to_outgrow.in_server:
+ stage: deploy
+ only:
+  refs:
+   - outgrow.in
+ tags:
+  - shell-og
+ dependencies:
+  - build_and_deploy_to_firebase
+ environment: 
+  name: development
+  url: http://livec.outgrow.in/_
+ script:
+  - cp -R dist/. /home/outgrow/livec/og-build
