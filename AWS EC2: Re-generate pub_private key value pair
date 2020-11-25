@@ -12,7 +12,7 @@ step 4: log in to new_ec2 using new_pem.pem file.
 step 5: follow these steps..
   mkdir /mnt/recovery
   #Mounting the volume using the previously annotated parameter as first argument
-  mount /dev/sdf(enter new name asxvdf if any error) /mnt/recovery
+  mount /dev/xvda1 /mnt/recovery
   cat /home/ec2-user/.ssh/authorized_keys > /mnt/recovery/home/ec2-user/.ssh/authorized_keys
   #Un-mounting the volume
   umount /mnt/recovery/
