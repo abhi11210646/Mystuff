@@ -20,9 +20,12 @@ Host another-pro
   
 Save and close this file
   
-Step:3 Clone gitHub repo // Repo cloning should be done after .ssh/config file is setup.
+Step:3 Clone gitHub repo // Repo cloning should be done after .ssh/config file is setup OR change remote origin if project is already setup on system.
 
-git clone git@personal:abhi11210646/Mystuff.git  // here 'personal' is the name we defined in .ssh/config file. step2
+a) git clone git@personal:abhi11210646/Mystuff.git  // here 'personal' is the name we defined in .ssh/config file. step2
+OR
+b) git remove remote origin
+   git add remote origin git@personal:abhi11210646/Mystuff.git   // if project is already on you system
 
 Step:4 You are done. now you can pull/push. 
 
